@@ -1,6 +1,6 @@
 # SparkSL Procedural Noise Example
 
-[]()
+![screenshot](https://spleennooname.github.io/sparksl-noise/1.png)
 
 ## Intro
 
