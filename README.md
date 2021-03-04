@@ -18,3 +18,5 @@ Currently a work in progress, feel free to file a PR if you'd like to contribute
 
  - the code base is versioned to SparkAr v102 
  - the effect has been tested on my iPhoneXR, but it would be interesting to have screenshots of rendering on other devices ;)
+
+![iphonexr](https://spleennooname.github.io/sparksl-noise/2.jpg)
