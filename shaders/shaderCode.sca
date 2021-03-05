@@ -3,14 +3,9 @@
  * https://www.instagram.com/vivacchio.exe/
  */
 
-
 precision highp float;
 
 using namespace std;
-
-#define R getRenderTargetSize()
-#define T Texture2d
-#define time getTime()
 
 // NOISE
 
@@ -103,16 +98,18 @@ float lerp(float v0, float v1, float t) {
 // @param buffer
 // @param[default=0.33,min=0.0,max=1.0] scaleNoise
 void main( 
-  optional<T> texture,
-  optional<T> buffer, 
+  optional<Texture2d> texture,
+  optional<Texture2d> buffer, 
   in float scaleNoise,
   out vec4 fragColor) {
 
   //
-  vec2 fragCoord = fragment(floor(R * getVertexTexCoord()));
-  vec2 uv = fragCoord.xy/R.y;
+  vec2 resolution = getRenderTargetSize();
+  vec2 fragCoord = fragment(floor(resolution * getVertexTexCoord()));
+  vec2 uv = fragCoord.xy/resolution.y;
   
   float f = 0.0;
+  float time = getTime();
 
   vec2 uvamp = uv * lerp(1., 32.0, scaleNoise) + time;
 
