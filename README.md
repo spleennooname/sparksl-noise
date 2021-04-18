@@ -13,6 +13,7 @@ Some functions of IQ(aka Inigo Quilez) the [shadertoy](https://www.shadertoy.com
 - [Simplex Noise](https://www.shadertoy.com/view/Msf3WH)
 - [Gradient Noise](https://www.shadertoy.com/view/XdXGW8)
 - [Value noise](https://www.shadertoy.com/view/lsf3WH)
+- [Worley noise](https://www.shadertoy.com/view/tldGzr)
 
 Currently a work in progress, feel free to file a PR if you'd like to contribute.
 
