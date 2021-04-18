@@ -11,9 +11,19 @@ using namespace std;
 
 namespace iq{
 
-  float hash21(in vec2 p){
+  /* float hash21(in vec2 p){
       p = 50.0*fract( p*0.3183099 + vec2(0.71,0.113));
       return -1.0+2.0*fract( p.x*p.y*(p.x+p.y) );
+  } */
+
+  // http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/
+  float hash21(vec2 co){
+    float a = 12.9898;
+    float b = 78.233;
+    float c = 43758.5453;
+    float dt= dot(co.xy ,vec2(a,b));
+    float sn= mod(dt,3.14);
+    return fract(sin(sn) * c);
   }
 
   vec2 hash22(in vec2 p){
@@ -22,12 +32,6 @@ namespace iq{
       a *= 2.0*3.14159287; // [0..2PI]
       return vec2(sin(a), cos(a));;
   }
-
-  //Dave Hoskins https://www.shadertoy.com/view/4djSRW
-  /* vec2 hash22(vec2 p){
-    return fract(cos(p*mat2(-64.2,71.3,81.4,-29.8))*8321.3);
-  } */
-
 
   //https://www.shadertoy.com/view/XdXGW8
   float gradientNoiseIQ( in vec2 p ){
@@ -73,21 +77,31 @@ namespace iq{
   }
 }
 
-/** Value noise courtesy of BigWingz 
-* check his youtube channel he has
-* a video of this one.
-* Succint version by FabriceNeyret
-* https://gamedev.stackexchange.com/questions/123739/simple-coherent-noise-function-to-use-in-a-glsl-shader
-*/
-/* float noise( vec2 uv ){
-    vec2 id = floor( uv );
-          uv = fract( uv );
-    uv *= uv * ( 3. - 2. * uv );  
-    vec2 A = vec2( hash21(id)            , hash21(id + vec2(0,1)) ),  
-         B = vec2( hash21(id + vec2(1,0)), hash21(id + vec2(1,1)) ),  
-         C = mix( A, B, uv.x);
-    return mix( C.x, C.y, uv.y );
-} */
+namespace shadertoy {
+
+  // Dave Hoskins https://www.shadertoy.com/view/4djSRW
+  vec2 hash22(vec2 p){
+    return fract(cos(p*mat2(-64.2,71.3,81.4,-29.8))*8321.3);
+  }
+ 
+  // Worley Chebyshev Noise
+  float worleyNoise(vec2 uv){
+    float n = 9e9;
+    for(int i = -1; i < 2; i++){
+      for(int j = -1; j < 2; j++){
+        vec2 p = floor(uv) + vec2(i, j);
+        vec2 h = hash22(p);
+        vec2 g = p + 0.5+ 0.5 * sin(h*12.6);
+        float xx = abs(uv.x-g.x);
+        float yy = abs(uv.y-g.y);
+        float d = max(xx, yy);
+        if(d < n){n = d;}
+            //n = n*1;
+      }
+    }
+    return n;
+  }
+}
 
 float lerp(float v0, float v1, float t) {
     return v0*(1.-t)+v1*t;
@@ -113,18 +127,21 @@ void main(
 
   vec2 uvamp = uv * lerp(1., 32.0, scaleNoise) + time;
 
-  if( uv.y < 0.33 ){
+  if( uv.y < 0.25 ){
     f = iq::gradientNoiseIQ( uvamp );
-  } else if (uv.y < 0.66) {
+  } else if (uv.y < 0.5) {
     f = iq::valueNoiseIQ( uvamp );
+  } else if (uv.y < 0.75) {
+     f = shadertoy::worleyNoise( uvamp );
   } else if (uv.y < 1.0) {
      f = iq::simplexNoiseIQ( uvamp  );
   }
   
   f = 0.5 + 0.5*f;
 	
-  f *= smoothstep( 0.0, 0.005, abs(uv.y-0.33) );
-  f *= smoothstep( 0.0, 0.005, abs(uv.y-0.66) );
+  f *= smoothstep( 0.0, 0.005, abs(uv.y-0.25) );
+  f *= smoothstep( 0.0, 0.005, abs(uv.y-0.5) );
+  f *= smoothstep( 0.0, 0.005, abs(uv.y-0.75) );
   //
   fragColor = vec4( f, f, f, 1.0 );
 }
