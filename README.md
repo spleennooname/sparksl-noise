@@ -23,10 +23,10 @@ You can compile the project within SparkAR and test it directly in your device.
 From picker UI (on bottom):
 
 ![photo5996829765165758148](https://user-images.githubusercontent.com/5708525/124906304-371cb600-dfe7-11eb-9587-298cc6fc39db.jpg)
-- 1. an overview of the various types of procedural noise computed in real-time
+- (1) an overview of the various types of procedural noise computed in real-time
 
 ![photo5996829765165758147](https://user-images.githubusercontent.com/5708525/124906309-397f1000-dfe7-11eb-8175-9fb1e0eb236e.jpg)
-- 2. visualize the effect of the noise on the texture camera of the device
+- (2) visualize the effect of the noise on the texture camera of the device
 
 From slider UI (on right):
 - adjust the amplitude of the noise value; you can find more details in shaders/shaderCode.sca
