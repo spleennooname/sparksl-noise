@@ -23,23 +23,20 @@ You can compile the project within SparkAR and test it directly in your device.
 From picker UI (on bottom):
 
 ![photo5996829765165758148](https://user-images.githubusercontent.com/5708525/124906304-371cb600-dfe7-11eb-9587-298cc6fc39db.jpg)
-* you can visualize the effect of the noise on the texture camera of the device
+- 1. an overview of the various types of procedural noise computed in real-time
 
 ![photo5996829765165758147](https://user-images.githubusercontent.com/5708525/124906309-397f1000-dfe7-11eb-8175-9fb1e0eb236e.jpg)
-* an overview of the various types of procedural noise computed in real-time
+- 2. visualize the effect of the noise on the texture camera of the device
 
-From slider UI (on right)
-
-you can adjust the amplitude of the noise value; you can find more details in shaders/shaderCode.sca
-
+From slider UI (on right):
+- adjust the amplitude of the noise value; you can find more details in shaders/shaderCode.sca
 
 Currently a work in progress, feel free to file a PR if you'd like to contribute. The project is updated to version 117 of SparkAR sdk.
-
 If you like the project and/or find it useful, drop me a star ;)
 
 ### Tested on
 
--  iPhoneXR
- - Huawei P9 Lite
+- iPhoneXR
+- Huawei P9 Lite
 
 
