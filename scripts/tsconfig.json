@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": "/var/folders/z_/zlpqw8wj01sb4p_17rjzlrqw0000gp/T/f82b-6d56-6b7c-fd1d/12256123e006457114b1f8a76deb3a651d76f",
+    "baseUrl": "/Users/andreabovo/Library/Caches/Facebook/Spark AR Studio/Scripting",
     "checkJs": true,
     "esModuleInterop": true,
     "lib": [
       "ES2019"
     ],
-    "outDir": "/var/folders/z_/zlpqw8wj01sb4p_17rjzlrqw0000gp/T/f82b-6d56-6b7c-fd1d/12256123e006457114b1f8a76deb3a651d76f/out-dir",
+    "outDir": "/Users/andreabovo/Library/Caches/Facebook/Spark AR Studio/Scripting/out-dir",
     "paths": {
       "*": [
-        "skylight-typedefs/*",
+        "skylight-typedefs/d91b23a774ce480d/*",
         "skylight-node_modules/*"
       ]
     },
     "typeRoots": [
-      "/var/folders/z_/zlpqw8wj01sb4p_17rjzlrqw0000gp/T/f82b-6d56-6b7c-fd1d/12256123e006457114b1f8a76deb3a651d76f/skylight-node_modules/@types"
+      "/Users/andreabovo/Library/Caches/Facebook/Spark AR Studio/Scripting/skylight-node_modules/@types"
     ],
     "types": [
       "node"
