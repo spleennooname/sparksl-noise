@@ -6,6 +6,8 @@
  * https://www.instagram.com/vivacchio.exe/
  */
 
+#import <utils>
+
 #import <shadertoy.sca>
 
 precision highp float;

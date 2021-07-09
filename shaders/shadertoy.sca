@@ -1,113 +1,109 @@
 
 // shadertoy.sca
 
-// http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/
-export float hash21(vec2 co){
-    float a = 12.9898;
-    float b = 78.233;
-    float c = 43758.5453;
-    float dt= dot(co.xy ,vec2(a,b));
-    float sn= mod(dt,3.14);
-    return fract(sin(sn) * c);
-  }
+//#import <utils>
 
-// Dave Hoskins https://www.shadertoy.com/view/4djSRW
-/* export vec2 hash22(in vec2 p){
-    return fract(cos(p*mat2(-64.2,71.3,81.4,-29.8))*8321.3);
-  } */
+precision highp float;
+
+const float PI = 3.1415928;
+
+// http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/
+export float hash21(in vec2 co){
+  float dt = dot(co.xy, vec2(13.0, 78.23));
+  float sn = mod(dt,PI);
+  return fract(sin(sn) * 3758.54);
+}
 
 export vec2 hash22(in vec2 p){
-      p = fract(p*0.3183099 + 0.1)*17.0;
-      float a = fract(p.x*p.y*(p.x + p.y)); // [0..1]
-      a *= 2.0*3.14159287; // [0..2PI]
-      return vec2(sin(a), cos(a));;
+  p = fract(p*0.3183099 + 0.1) * 17.0;
+  float a = fract(p.x*p.y*(p.x + p.y)); // [0..1]
+  a *= 2.0*PI; // [0..2PI]
+  return vec2(sin(a), cos(a));;
 }
 
 export vec3 hash23(in vec2 p ){
-  vec3 q = vec3( dot(p,vec2(127.1,311.7)), 
-				   dot(p,vec2(269.5,183.3)), 
-				   dot(p,vec2(419.2,371.9)) );
-	return fract(sin(q)*43758.5453);
+  vec3 q = vec3(dot(p, vec2(127.10,311.70)), 
+				   dot(p, vec2(269.50, 183.30)), 
+				   dot(p, vec2(419.20, 371.90)) );
+	return fract(sin(q) * 43758.54);
 }
 
 // Worley Chebyshev Noise
 export float worleyNoise(vec2 uv){
-    float n = 9e9;
-    for(int i = -1; i < 2; i++){
-      for(int j = -1; j < 2; j++){
-        vec2 p = floor(uv) + vec2(i, j);
-        vec2 h = hash22(p);
-        vec2 g = p + 0.5+ 0.5 * sin(h*12.6);
-        float xx = abs(uv.x-g.x);
-        float yy = abs(uv.y-g.y);
-        float d = max(xx, yy);
-        if(d < n){n = d;}
-      }
+  float n = 9e9;
+  for(int i = -1; i < 2; i++){
+    for(int j = -1; j < 2; j++){
+      vec2 p = floor(uv) + vec2(i, j);
+      vec2 h = hash22(p);
+      vec2 g = p + 0.5+ 0.5 * sin(h*12.60);
+      float xx = abs(uv.x-g.x);
+      float yy = abs(uv.y-g.y);
+      float d = max(xx, yy);
+      n = d < n ? d : n;
     }
-    return n;
+  }
+  return n;
 }
 
 // https://www.shadertoy.com/view/Xd23Dh
 export float voroNoiseIQ( in vec2 p, float u, float v ){
-	float k = 1.0+63.0*pow(1.0-v,6.0);
-
+	float k = 1.0 + 64.0 * pow(1.0-v, 6.0);
   vec2 i = floor(p);
   vec2 f = fract(p);
-    
 	vec2 a = vec2(0.0,0.0);
-    for( int y=-2; y<=2; y++ )
-      for( int x=-2; x<=2; x++ ){
-        vec2  g = vec2( x, y );
-        vec3  o = hash23( i + g )*vec3(u,u,1.0);
-        vec2  d = g - f + o.xy;
-        float w = pow( 1.0-smoothstep(0.0,1.414,length(d)), k );
-        a += vec2(o.z*w,w);
-      }
-      
+  for( int y=-2; y<=2; y++ ){
+    for( int x=-2; x<=2; x++ ){
+      vec2  g = vec2( x, y );
+      vec3  o = hash23( i + g ) * vec3(u, u, 1.0);
+      vec2  d = g - f + o.xy;
+      float w = pow( 1.0 - smoothstep(0.0, 1.41, length(d)), k );
+      a += vec2(o.z*w, w);
+    }
+  }
 	return a.x/a.y;
 }
 
- //https://www.shadertoy.com/view/XdXGW8
+//https://www.shadertoy.com/view/XdXGW8
 export float gradientNoiseIQ( in vec2 p ){
-    vec2 i = floor( p );
-    vec2 f = fract( p );
-    
-    vec2 u = f*f*(3.0-2.0*f);
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f*f*(3.0-2.0*f);
+  return mix( mix(dot( hash22( i + vec2(0.0,0.0) ), f - vec2(0.0,0.0) ), 
+                  dot( hash22( i + vec2(1.0,0.0) ), f - vec2(1.0,0.0) ), u.x),
 
-    return mix( 
-                mix( dot( hash22( i + vec2(0.0,0.0) ), f - vec2(0.0,0.0) ), 
-                    dot( hash22( i + vec2(1.0,0.0) ), f - vec2(1.0,0.0) ), u.x),
-
-                mix( dot( hash22( i + vec2(0.0,1.0) ), f - vec2(0.0,1.0) ), 
-                    dot( hash22( i + vec2(1.0,1.0) ), f - vec2(1.0,1.0) ), u.x), u.y);
-  }
-
-
+              mix(dot( hash22( i + vec2(0.0,1.0) ), f - vec2(0.0,1.0) ), 
+                  dot( hash22( i + vec2(1.0,1.0) ), f - vec2(1.0,1.0) ), u.x), u.y);
+}
  
-  // https://www.shadertoy.com/view/Msf3WH
-  export float simplexNoiseIQ( in vec2 p ){
-    const float K1 = 0.366025404; // (sqrt(3)-1)/2;
-    const float K2 = 0.211324865; // (3-sqrt(3))/6;
-    vec2  i = floor( p + (p.x+p.y)*K1 );
-    vec2  a = p - i + (i.x+i.y)*K2;
-    float m = step(a.y,a.x); 
-    vec2  o = vec2(m,1.0-m);
-    vec2  b = a - o + K2;
-    vec2  c = a - 1.0 + 2.0*K2;
-    vec3  h = max( 0.5-vec3(dot(a,a), dot(b,b), dot(c,c) ), 0.0 );
-    vec3  n = h*h*h*h*vec3( dot(a,hash22(i+0.0)), dot(b,hash22(i+o)), dot(c,hash22(i+1.0)));
-    return dot( n, vec3(70.0) );
-  }
+// https://www.shadertoy.com/view/Msf3WH
+export float simplexNoiseIQ( in vec2 p ){
+  const float K1 = 0.366025404; // (sqrt(3)-1)/2;
+  const float K2 = 0.211324865; // (3-sqrt(3))/6;
+  vec2  i = floor( p + (p.x+p.y)*K1 );
+  vec2  a = p - i + (i.x+i.y)*K2;
+  float m = step(a.y, a.x); 
+  vec2  o = vec2(m, 1.0-m);
+  vec2  b = a - o + K2;
+  vec2  c = a - 1.0 + 2.0*K2;
+  vec3  h = max( 0.5 - vec3(dot(a,a), 
+                            dot(b,b), 
+                            dot(c,c) ), 0.0 );
+  vec3  n = h*h*h*h*vec3( dot(a,hash22(i+0.0)), 
+                          dot(b,hash22(i+o)), 
+                          dot(c,hash22(i+1.0))
+                        );
+  return dot( n, vec3(70.0) );
+}
 
-  // https://www.shadertoy.com/view/lsf3WH
-  export float valueNoiseIQ( in vec2 p ){
-    vec2 i = floor( p );
-    vec2 f = fract( p );
-    vec2 u = f*f*(3.0-2.0*f);
-    return mix( 
-                mix( hash21( i + vec2(0.0,0.0) ), 
-                    hash21( i + vec2(1.0,0.0) ), u.x),
-
-                mix( hash21( i + vec2(0.0,1.0) ), 
-                    hash21( i + vec2(1.0,1.0) ), u.x), u.y);
-  } 
+// https://www.shadertoy.com/view/lsf3WH
+export float valueNoiseIQ( in vec2 p ){
+  vec2 i = floor( p );
+  vec2 f = fract( p );
+  vec2 u = f*f*(3.0-2.0*f);
+  return mix( 
+              mix(hash21( i + vec2(0.0,0.0) ), 
+                  hash21( i + vec2(1.0,0.0) ), u.x),
+              mix(hash21( i + vec2(0.0,1.0) ), 
+                  hash21( i + vec2(1.0,1.0) ), u.x), u.y
+            );
+} 
