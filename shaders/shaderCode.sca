@@ -1,12 +1,10 @@
 // shaderCode.sca
 
-/*  
- * 
+ /*  
+ *
  * Andrea Bovo <spleen666@gmail.com>
  * https://www.instagram.com/vivacchio.exe/
  */
-
-#import <utils>
 
 #import <shadertoy.sca>
 
@@ -36,10 +34,11 @@ vec4 main(
   
   float time = getTime();
 
+  // lerping scaled value noise for uv 1..32
   vec2 uvamp = uv * lerp(1., 32.0, scaleNoise) + time;
 
-  float a = 1.0;
-  vec2 p = a - a*cos(time*vec2(2.*a,a) );
+  float a = 2.0;
+  vec2 p = 1. - cos(time * vec2(2.*a, 1.0) );
 
   float f = 0.0;
 
@@ -54,19 +53,14 @@ vec4 main(
   } else if (uv.y < 1.0) {
      f = voroNoiseIQ( uvamp,  p.x, p.y  );
   }
-  
-  f = mode == 0. ? 5e-1 * f + 5e-1 :
-                   5e-2 * f - 5e-2 ;
 
-
- 
-
+  // dividing lines
   f *= smoothstep( 0.0, 1e-3, abs(uv.y-0.2) );
   f *= smoothstep( 0.0, 1e-3, abs(uv.y-0.4) );
   f *= smoothstep( 0.0, 1e-3, abs(uv.y-0.6) );
   f *= smoothstep( 0.0, 1e-3, abs(uv.y-0.8) );
 
   //
-  return mode == 0. ? vec4(vec3(f), 1.0) : 
-                      texture.sample(uv + f );
+  return mode == 0. ? vec4(vec3( 5e-1 * f + 5e-1 ), 1.0) : // only the noise contribute
+                      texture.sample(uv + (5e-2 * f - 5e-2) ); // add noise to texture
 }

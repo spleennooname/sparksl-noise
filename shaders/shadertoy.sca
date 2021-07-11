@@ -1,8 +1,6 @@
 
 // shadertoy.sca
 
-//#import <utils>
-
 precision highp float;
 
 const float PI = 3.1415928;

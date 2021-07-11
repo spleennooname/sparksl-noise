@@ -10,10 +10,10 @@ This is a minimal proof of concept of how to get different types of procedural n
 
 Much of IQ(aka Inigo Quilez)'s work - the [shadertoy](https://www.shadertoy.com/) mastermind - is assumed as "gold standard", in this porting from GLSL.
 
-- [Simplex Noise](https://www.shadertoy.com/view/Msf3WH)
-- [Gradient Noise](https://www.shadertoy.com/view/XdXGW8)
-- [Value noise](https://www.shadertoy.com/view/lsf3WH)
+- [Gradient noise](https://www.shadertoy.com/view/XdXGW8)
 - [Worley noise](https://www.shadertoy.com/view/tldGzr)
+- [Value noise](https://www.shadertoy.com/view/lsf3WH)
+- [Simplex noise](https://www.shadertoy.com/view/Msf3WH)
 - [Voro noise](https://www.shadertoy.com/view/Xd23Dh)
 
 # short howto
