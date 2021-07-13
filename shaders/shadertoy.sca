@@ -1,9 +1,11 @@
 
 // shadertoy.sca
 
-precision highp float;
+#import <utils>
 
 const float PI = 3.1415928;
+
+using namespace std;
 
 // http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/
 export float hash21(in vec2 co){
@@ -54,7 +56,7 @@ export float voroNoiseIQ( in vec2 p, float u, float v ){
       vec2  g = vec2( x, y );
       vec3  o = hash23( i + g ) * vec3(u, u, 1.0);
       vec2  d = g - f + o.xy;
-      float w = pow( 1.0 - smoothstep(0.0, 1.41, length(d)), k );
+      float w = pow( 1.0 - smoothstep(0.0, 1.41, safeLength(d)), k );
       a += vec2(o.z*w, w);
     }
   }
