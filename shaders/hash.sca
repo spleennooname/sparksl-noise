@@ -1,7 +1,36 @@
 // hash.sca
-// iq's hash functions rely on trig, but assure good-looking results
 
 const float PI = 3.1415928;
+
+// hash functions by @Dave_Hoskins that doesn't rely on trig functions
+// https://www.shadertoy.com/view/4djSRW
+
+/* export float h11(float p){
+    p = fract(p * .1031);
+    p *= p + 33.33;
+    p *= p + p;
+    return fract(p);
+}
+
+export float h12(vec2 p){
+  vec3 p3 = fract(vec3(p.xyx) * .1031);
+  p3 += dot(p3, p3.yzx + 33.33);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+export vec2 h22(vec2 p){
+  vec3 p3 = fract(vec3(p.xyx) * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yzx+33.33);
+  return fract((p3.xx+p3.yz)*p3.zy);
+}
+
+export vec3 h32(vec2 p){
+vec3 p3 = fract(vec3(p.xyx) * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yxz+33.33);
+  return fract((p3.xxy+p3.yzz)*p3.zyx);
+} */
+
+// iq's hash functions rely on trig, but assure good-looking results
 
 export float h12(in vec2 co){
   float dt = dot(co.xy, vec2(13.0, 78.23));
