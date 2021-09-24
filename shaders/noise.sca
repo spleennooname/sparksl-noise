@@ -1,32 +1,11 @@
 
-// shadertoy.sca
+// noise.sca
+
+#import <hash.sca>
 
 #import <utils>
 
-const float PI = 3.1415928;
-
 using namespace std;
-
-// http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/
-export float hash21(in vec2 co){
-  float dt = dot(co.xy, vec2(13.0, 78.23));
-  float sn = mod(dt,PI);
-  return fract(sin(sn) * 3758.54);
-}
-
-export vec2 hash22(in vec2 p){
-  p = fract(p*0.3183099 + 0.1) * 17.0;
-  float a = fract(p.x*p.y*(p.x + p.y)); // [0..1]
-  a *= 2.0*PI; // [0..2PI]
-  return vec2(sin(a), cos(a));;
-}
-
-export vec3 hash23(in vec2 p ){
-  vec3 q = vec3(dot(p, vec2(127.10,311.70)), 
-				   dot(p, vec2(269.50, 183.30)), 
-				   dot(p, vec2(419.20, 371.90)) );
-	return fract(sin(q) * 43758.54);
-}
 
 // Worley Chebyshev Noise
 export float worleyNoise(vec2 uv){
@@ -34,7 +13,7 @@ export float worleyNoise(vec2 uv){
   for(int i = -1; i < 2; i++){
     for(int j = -1; j < 2; j++){
       vec2 p = floor(uv) + vec2(i, j);
-      vec2 h = hash22(p);
+      vec2 h = h22(p);
       vec2 g = p + 0.5+ 0.5 * sin(h*12.60);
       float xx = abs(uv.x-g.x);
       float yy = abs(uv.y-g.y);
@@ -54,7 +33,7 @@ export float voroNoiseIQ( in vec2 p, float u, float v ){
   for( int y=-2; y<=2; y++ ){
     for( int x=-2; x<=2; x++ ){
       vec2  g = vec2( x, y );
-      vec3  o = hash23( i + g ) * vec3(u, u, 1.0);
+      vec3  o = h32( i + g ) * vec3(u, u, 1.0);
       vec2  d = g - f + o.xy;
       float w = pow( 1.0 - smoothstep(0.0, 1.41, safeLength(d)), k );
       a += vec2(o.z*w, w);
@@ -68,11 +47,11 @@ export float gradientNoiseIQ( in vec2 p ){
   vec2 i = floor(p);
   vec2 f = fract(p);
   vec2 u = f*f*(3.0-2.0*f);
-  return mix( mix(dot( hash22( i + vec2(0.0,0.0) ), f - vec2(0.0,0.0) ), 
-                  dot( hash22( i + vec2(1.0,0.0) ), f - vec2(1.0,0.0) ), u.x),
+  return mix( mix(dot( h22( i + vec2(0.0,0.0) ), f - vec2(0.0,0.0) ), 
+                  dot( h22( i + vec2(1.0,0.0) ), f - vec2(1.0,0.0) ), u.x),
 
-              mix(dot( hash22( i + vec2(0.0,1.0) ), f - vec2(0.0,1.0) ), 
-                  dot( hash22( i + vec2(1.0,1.0) ), f - vec2(1.0,1.0) ), u.x), u.y);
+              mix(dot( h22( i + vec2(0.0,1.0) ), f - vec2(0.0,1.0) ), 
+                  dot( h22( i + vec2(1.0,1.0) ), f - vec2(1.0,1.0) ), u.x), u.y);
 }
  
 // https://www.shadertoy.com/view/Msf3WH
@@ -88,9 +67,9 @@ export float simplexNoiseIQ( in vec2 p ){
   vec3  h = max( 0.5 - vec3(dot(a,a), 
                             dot(b,b), 
                             dot(c,c) ), 0.0 );
-  vec3  n = h*h*h*h*vec3( dot(a,hash22(i+0.0)), 
-                          dot(b,hash22(i+o)), 
-                          dot(c,hash22(i+1.0))
+  vec3  n = h*h*h*h*vec3( dot(a,h22(i+0.0)), 
+                          dot(b,h22(i+o)), 
+                          dot(c,h22(i+1.0))
                         );
   return dot( n, vec3(70.0) );
 }
@@ -101,9 +80,9 @@ export float valueNoiseIQ( in vec2 p ){
   vec2 f = fract( p );
   vec2 u = f*f*(3.0-2.0*f);
   return mix( 
-              mix(hash21( i + vec2(0.0,0.0) ), 
-                  hash21( i + vec2(1.0,0.0) ), u.x),
-              mix(hash21( i + vec2(0.0,1.0) ), 
-                  hash21( i + vec2(1.0,1.0) ), u.x), u.y
+              mix(h12( i + vec2(0.0,0.0) ), 
+                  h12( i + vec2(1.0,0.0) ), u.x),
+              mix(h12( i + vec2(0.0,1.0) ), 
+                  h12( i + vec2(1.0,1.0) ), u.x), u.y
             );
 } 

@@ -1,0 +1,24 @@
+// hash.sca
+// iq's hash functions rely on trig, but assure good-looking results
+
+const float PI = 3.1415928;
+
+export float h12(in vec2 co){
+  float dt = dot(co.xy, vec2(13.0, 78.23));
+  float sn = mod(dt,PI);
+  return fract(sin(sn) * 3758.54);
+}
+
+export vec2 h22(in vec2 p){
+  p = fract(p*0.3183099 + 0.1) * 17.0;
+  float a = fract(p.x*p.y*(p.x + p.y)); // [0..1]
+  a *= 2.0*PI; // [0..2PI]
+  return vec2(sin(a), cos(a));;
+}
+
+export vec3 h32(in vec2 p ){
+  vec3 q = vec3(dot(p, vec2(127.10,311.70)), 
+				   dot(p, vec2(269.50, 183.30)), 
+				   dot(p, vec2(419.20, 371.90)) );
+	return fract(sin(q) * 43758.54);
+}

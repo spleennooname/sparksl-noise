@@ -2,7 +2,7 @@
 
 [![Watch the video](https://img.youtube.com/vi/fSQ9WEVTR18/maxresdefault.jpg)](https://youtu.be/fSQ9WEVTR18)
 
-![](https://img.shields.io/badge/sdk-v117-green)
+![](https://img.shields.io/badge/sdk-v122-green)
 
 ## Intro
 
