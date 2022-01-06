@@ -43,23 +43,28 @@ vec4 main(
 
   float f = 0.0;
 
-  if( uv.y < 0.2 ){
+  // replace 6 with the amount of shaders
+  int shaders = 6;
+  float split = 1. / float(shaders);
+
+  if( uv.y < split * 1. ){
     f = gradientNoiseIQ( uvamp );
-  } else if (uv.y < 0.4) {
+  } else if (uv.y < split * 2.) {
     f = valueNoiseIQ( uvamp );
-  } else if (uv.y < 0.6) {
-     f = worleyNoise( uvamp );
-  } else if (uv.y < 0.8) {
-     f = simplexNoiseIQ( uvamp  );
-  } else if (uv.y < 1.0) {
-     f = voroNoiseIQ( uvamp,  p.x, p.y  );
-  }
+  } else if (uv.y < split * 3.) {
+    f = worleyNoise( uvamp );
+  } else if (uv.y < split * 4.) {
+    f = simplexNoiseIQ( uvamp  );
+  } else if (uv.y < split * 5.) {
+    f = voroNoiseIQ( uvamp,  p.x, p.y  );
+  } else if (uv.y < split * 6.) {
+    f = fastNoiseLambda( vec3(uvamp, uvamp.x/uvamp.y), vec3(3.), vec3(0.1)  );
+}
 
   // dividing lines
-  f *= smoothstep( 0.0, 1e-3, abs(uv.y-0.2) );
-  f *= smoothstep( 0.0, 1e-3, abs(uv.y-0.4) );
-  f *= smoothstep( 0.0, 1e-3, abs(uv.y-0.6) );
-  f *= smoothstep( 0.0, 1e-3, abs(uv.y-0.8) );
+  for (int s = 0; s < shaders; s++){
+    f *= smoothstep( 0.0, 1e-3, abs(uv.y - split * float(s)) );
+  }
 
   //
   return mode == 0. ? vec4(vec3( 5e-1 * f + 5e-1 ), 1.0) : // only the noise contribute
